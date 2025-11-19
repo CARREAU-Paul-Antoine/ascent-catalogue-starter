@@ -8,7 +8,7 @@ const FORMATION_SCHEMA = {
     titre: { type: 'string', required: true, minLength: 1 },
     description: { type: 'string', required: true, minLength: 1 },
     duree: { type: 'number', required: true, min: 1 },
-    niveau: { type: 'string', required: true, enum: ['Débutant', 'Intermédiaire', 'Avancé'] },
+    niveau: { type: 'string', required: true, enum: ['debutant', 'intermediaire', 'avance'] },
     prix: { type: 'number', required: true, min: 0 },
     formateur: { type: 'string', required: true, minLength: 1 }
 };

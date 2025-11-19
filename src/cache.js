@@ -1,7 +1,7 @@
-import fs from 'fs/promises';
-import fsWatch from 'fs';
+import fs from 'fs';
+import fsPromises from 'fs/promises';
 import path from 'path';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,37 +11,23 @@ let cache = null;
 let lastLoadTime = null;
 let hits = 0;
 let misses = 0;
+let watcher = null;
 let reloadTimeout = null;
 
-// Charger le cache initialement
 async function loadCache() {
     try {
-        const data = await fs.readFile(FORMATIONS_FILE, 'utf-8');
-        cache = JSON.parse(data);
+        const start = Date.now();
+        const data = await fsPromises.readFile(FORMATIONS_FILE, 'utf-8');
+        const parsed = JSON.parse(data);
+        cache = parsed;
         lastLoadTime = new Date();
-        console.log(`Cache chargé avec ${cache.length} formations.`);
+        console.log(`Cache chargé avec ${cache.length} formations en ${Date.now()-start} ms.`);
     } catch (error) {
         console.error('Erreur lors du chargement du cache:', error);
+        // keep old cache intact
     }
 }
 
-// Surveillance asynchrone des modifications du fichier
-
-fsWatch.watch(FORMATIONS_FILE, (eventType) => {
-    if (eventType === 'change') {
-        if (reloadTimeout) clearTimeout(reloadTimeout);
-        reloadTimeout = setTimeout(async () => {
-            console.log('Rechargement du cache après debounce...');
-            try {
-                await loadCache();
-            } catch (e) {
-                console.error('Erreur lors du rechargement debounce:', e);
-            }
-        }, 150); // délai 150ms
-    }
-});
-
-// Récupération des formations avec comptage des hits/misses
 export async function getCachedFormations() {
     if (!cache) {
         misses++;
@@ -52,7 +38,6 @@ export async function getCachedFormations() {
     return cache;
 }
 
-// Accès aux métriques
 export function getCacheMetrics() {
     return {
         lastLoadTime,
@@ -61,10 +46,32 @@ export function getCacheMetrics() {
     };
 }
 
-// Charger le cache au démarrage
-loadCache();
+export function startWatcher() {
+    watcher = fs.watch(FORMATIONS_FILE, (eventType) => {
+        if (eventType === 'change') {
+            if (reloadTimeout) clearTimeout(reloadTimeout);
+            reloadTimeout = setTimeout(async () => {
+                console.log('Rechargement du cache après debounce...');
+                await loadCache();
+            }, 150);
+        }
+    });
+}
 
-export default {
-    getCachedFormations,
-    getCacheMetrics
-};
+export function closeWatcher() {
+    if (watcher) {
+        watcher.close();
+    }
+}
+
+/**
+ * Pour tests uniquement : override manuel du cache
+ */
+export function __testSetCache(newCache) {
+    cache = newCache;
+    lastLoadTime = new Date();
+}
+
+// Initial load + start watching file changes
+await loadCache();
+startWatcher();

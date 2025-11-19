@@ -17,7 +17,7 @@ export function validateSearchParams(req, res, next) {
     }
 
     // Validation niveau
-    const niveauxValides = ['débutant', 'intermédiaire', 'avancé'];
+    const niveauxValides = ['debutant', 'intermediaire', 'avance'];
     if (req.query.niveau) {
         const niveau = normalizeString(req.query.niveau);
         if (!niveauxValides.includes(niveau)) {

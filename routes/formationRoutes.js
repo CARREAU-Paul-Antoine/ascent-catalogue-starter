@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getFormations, searchFormationsController, searchFormationsAdvancedController} from '../controllers/formationController.js';
 import {validateSearchParams} from "../middlewares/validation.js";
-import {getCacheMetricsController} from "../controllers/cacheController.js";
+import { getCacheMetricsController } from '../controllers/cacheController.js';
 
 const router = Router();
 
