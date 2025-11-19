@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getFormations, searchFormationsController } from '../controllers/formationController.js';
+import { getFormations, searchFormationsController, searchFormationsAdvancedController} from '../controllers/formationController.js';
 
 const router = Router();
 
@@ -8,5 +8,14 @@ router.get('/', getFormations);
 
 // GET /formations/search?keyword=XXX - Recherche par mot-clé
 router.get('/search', searchFormationsController);
+
+// GET /formations/advanced-search - Recherche avancée avec pagination, filtres et tri
+// Exemples d'utilisation :
+// ?keyword=node&page=1&limit=10
+// ?niveau=Intermédiaire&prixMax=500&dureeMin=2
+// ?sort=prix&order=asc
+// ?keyword=express&niveau=Avancé&prixMax=800&sort=duree&order=desc&page=1&limit=5
+router.get('/advanced-search', searchFormationsAdvancedController);
+
 
 export default router;
