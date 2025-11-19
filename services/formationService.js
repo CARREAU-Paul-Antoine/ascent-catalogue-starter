@@ -1,5 +1,5 @@
 import { loadFormations } from '../dao/formationDao.js';
-import { normalizeString } from '../utils/Validator.js';
+import { normalizeString } from '../utils/stringUtils.js';
 
 /**
  * Récupère toutes les formations

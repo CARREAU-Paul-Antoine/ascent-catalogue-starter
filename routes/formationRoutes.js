@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getFormations, searchFormationsController, searchFormationsAdvancedController} from '../controllers/formationController.js';
+import {validateSearchParams} from "../middlewares/validation.js";
 
 const router = Router();
 
@@ -15,7 +16,7 @@ router.get('/search', searchFormationsController);
 // ?niveau=Intermédiaire&prixMax=500&dureeMin=2
 // ?sort=prix&order=asc
 // ?keyword=express&niveau=Avancé&prixMax=800&sort=duree&order=desc&page=1&limit=5
-router.get('/advanced-search', searchFormationsAdvancedController);
+router.get('/advanced-search', validateSearchParams, searchFormationsAdvancedController);
 
 
 export default router;

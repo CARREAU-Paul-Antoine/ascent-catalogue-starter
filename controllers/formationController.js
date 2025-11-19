@@ -1,33 +1,63 @@
-import { getAllFormations, searchFormations, searchFormationsAdvanced } from '../services/formationService.js';
-import { validatePagination, validateSort, validateFilters } from '../utils/Validator.js';
+import {
+    getAllFormations,
+    searchFormations,
+    searchFormationsAdvanced
+} from '../services/formationService.js';
+import { validatePagination, validateSort, validateFilters } from '../utils/stringUtils.js';
 
 /**
  * Récupère toutes les formations
  */
-export async function getFormations(req, res) {
-    const formations = await getAllFormations();
-    res.json(formations);
+export async function getFormations(req, res, next) {
+    try {
+        const formations = await getAllFormations();
+        res.json({
+            success: true,
+            count: formations.length,
+            data: formations
+        });
+    } catch (error) {
+        next(error);
+    }
 }
 
 /**
- * Recherche des formations par mot-clé
+ * Recherche simple par mot-clé uniquement
+ * GET /formations/search?keyword=XXX
  */
-export async function searchFormationsController(req, res) {
-    const { keyword } = req.query;
-    const results = await searchFormations(keyword);
-    res.json(results);
+export async function searchFormationsController(req, res, next) {
+    try {
+        const { keyword } = req.query;
+
+        const results = await searchFormations(keyword);
+
+        res.json({
+            success: true,
+            count: results.length,
+            data: results
+        });
+    } catch (error) {
+        next(error);
+    }
 }
 
 /**
- * Recherche avancée avec pagination, filtres et tri
+ * Recherche avancée avec pagination, filtres multiples et tri
+ * GET /formations/advanced-search?keyword=XXX&niveau=YYY&prixMax=ZZZ&sort=AAA&order=BBB&page=N&limit=M
  */
-export async function searchFormationsAdvancedController(req, res) {
-    // Validation et sanitization des paramètres
-    const { page, limit } = validatePagination(req.query.page, req.query.limit);
-    const { sort, order } = validateSort(req.query.sort, req.query.order);
-    const filters = validateFilters(req.query);
+export async function searchFormationsAdvancedController(req, res, next) {
+    try {
+        const { page, limit } = validatePagination(req.query.page, req.query.limit);
+        const { sort, order } = validateSort(req.query.sort, req.query.order);
+        const filters = validateFilters(req.query);
 
-    const result = await searchFormationsAdvanced(filters, sort, order, page, limit);
+        const result = await searchFormationsAdvanced(filters, sort, order, page, limit);
 
-    res.json(result);
+        res.json({
+            success: true,
+            ...result
+        });
+    } catch (error) {
+        next(error);
+    }
 }
