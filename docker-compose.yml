@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: ascent-catalogue-app
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app
+      - /app/node_modules  # Ignore node_modules du host
+    environment:
+      - NODE_ENV=production
+    command: ["node", "src/index.js"]
