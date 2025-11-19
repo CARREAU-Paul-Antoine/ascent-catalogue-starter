@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": 123,
     "titre": "Introduction à Node.js",
     "description": "Découvrez les bases de Node.js et son écosystème",
     "duree": 2,
@@ -81,7 +81,7 @@
     "formateur": "Sophie Bernard"
   },
   {
-    "id": 1,
+    "id": 100,
     "titre": "Introduction à Node.js - Édition Avancée",
     "description": "Version avancée du cours d'introduction",
     "duree": 3,
