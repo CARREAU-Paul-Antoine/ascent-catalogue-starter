@@ -8,7 +8,7 @@ services:
       - "4200:4200"
     volumes:
       - .:/app
-      - /app/node_modules  # Ignore node_modules du host
+      - /app/node_modules
     environment:
       - NODE_ENV=production
     command: ["node", "src/index.js"]

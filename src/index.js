@@ -3,8 +3,10 @@ import { PORT_LISTEN } from '../config/network.js';
 import formationRoutes from '../routes/formationRoutes.js';
 import { errorHandler, notFoundHandler } from '../middlewares/errorHandler.js';
 import { configureHelmet, configureCORS, configureRateLimit } from '../middlewares/securityHeaders.js';
+import { setupSwagger } from './swagger.js';
 
 const app = express();
+setupSwagger(app);
 const PORT = PORT_LISTEN || 4200;
 
 // ============================================
@@ -63,4 +65,5 @@ app.listen(PORT, () => {
     console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
     console.log(`📚 Environnement: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔒 Sécurité: Helmet, CORS, Rate Limiting activés`);
+    console.log('Documentation API disponible sur http://localhost:4200/api-docs');
 });

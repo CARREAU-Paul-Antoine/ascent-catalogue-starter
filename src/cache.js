@@ -24,7 +24,6 @@ async function loadCache() {
         console.log(`Cache chargé avec ${cache.length} formations en ${Date.now()-start} ms.`);
     } catch (error) {
         console.error('Erreur lors du chargement du cache:', error);
-        // keep old cache intact
     }
 }
 
